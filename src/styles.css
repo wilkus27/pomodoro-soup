@@ -1,0 +1,148 @@
+:root {
+    --color1: #991b27;
+    --color2: #bd2630;
+    --color3: #e64f25;
+    --color4: #ed884c;
+    --color5: #f1a183;
+    --color6: #E5DADA;
+}
+
+body {
+    /* background: #840032; */
+    /* background: #740938; */
+    background: var(--color1);
+    color: var(--color6);
+    font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.container {
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tasks-top-panel {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: var(--color6) 2px solid;
+}
+
+.tasks-title {
+    font-size: 1.5rem;
+}
+
+.new-task-button {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 0px;
+    background: var(--color5);
+    color: var(--color1);
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.new-task-card {
+    width: 100%;
+    margin-top: 20px;
+    background: var(--color4);
+    border-radius: 8px;
+}
+
+.new-task-card-container {
+    margin-bottom: 12px;
+    padding: 20px;
+}
+
+.new-task-input {
+    font-size: 2rem;
+    color: var(--color1);
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin-bottom: 12px;
+}
+
+.new-task-input::placeholder {
+    font-style: italic;
+    color: var(--color6);
+    opacity: 0.8;
+}
+
+.new-task-input:focus {
+    outline: none;
+}
+
+.pomodoros-title-container {
+    margin-bottom: 12px;
+}
+
+.pomodoros-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color1);
+}
+
+.pomodoros-counting {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.pomodoros-input {
+    padding: 12px;
+    width: 50px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color6);
+    color: var(--color1);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.pomodoros-input:focus {
+    outline: none;
+}
+
+.pomodoros-button {
+    color: var(--color6);
+    background: var(--color2);
+    border: none;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.new-task-card-bar {
+    padding: 20px;
+    background: var(--color5);
+    border-radius: 0px 0px 8px 8px;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+}
+
+.btn-save {
+    background: var(--color2);
+    color: var(--color6);
+    font-weight: bold;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.btn-cancel {
+    border: none;
+    background: none;
+    color: var(--color2);
+    font-weight: bold;
+}
