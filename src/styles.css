@@ -146,3 +146,20 @@ input::-webkit-inner-spin-button {
     color: var(--color2);
     font-weight: bold;
 }
+
+.tasks-list {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.tasks-item {
+    background: var(--color6);
+    color: var(--color3);
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+}
