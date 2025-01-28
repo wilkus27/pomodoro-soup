@@ -4,6 +4,7 @@
     --color3: #e64f25;
     --color4: #ed884c;
     --color5: #f1a183;
+    --color5faded: #f1a1834a;
     --color6: #E5DADA;
     --color7: #D5C5C3;
 }
@@ -252,4 +253,63 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: end;
     gap: 20px;
+}
+
+/* TIMER */
+
+.timer-container {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.timer {
+    background: var(--color5faded);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 20px;
+    padding: 20px;
+}
+
+.timer-options {
+    display: flex;
+    gap: 8px;
+}
+
+.timer-option-btn {
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    color: var(--color6);
+}
+
+.timer-option-btn.active {
+    font-weight: bold;
+    background: var(--color1);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.timer-option-btn:hover {
+    cursor: pointer;
+}
+
+.timer-string {
+    font-size: 8rem;
+}
+
+.timer-btn {
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 12px;
+    background: var(--color5);
+    color: var(--color1);
+    border-radius: 8px;
+    border: none;
+}
+
+.timer-btn:hover {
+    cursor: pointer;
 }
