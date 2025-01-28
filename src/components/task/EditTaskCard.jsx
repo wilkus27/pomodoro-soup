@@ -1,0 +1,69 @@
+import { useState } from "react";
+
+export default function EditTaskCard({ isEditing, task, editTask}) {
+    const [newTaskName, setNewTaskName] = useState(task.name);
+    const [newEstPomodoros, setNewEstPomodoros] = useState(task.estPomodoros);
+
+    function cancel() {
+        isEditing();
+    }
+
+    function save() {
+        editTask(task.id, newTaskName, newEstPomodoros);
+        isEditing();
+    }
+
+    function handleTaskNameChange(event) {
+        setNewTaskName(event.target.value);
+    }
+
+    function increasePomodoros() {
+        setNewEstPomodoros(currentPomodoros => {
+            return currentPomodoros += 1;
+        })
+    }
+
+    function decreasePomodoros() {
+        setNewEstPomodoros(currentPomodoros => {
+            if(currentPomodoros > 0) {
+                return currentPomodoros -= 1;
+            } else {
+                return 0;
+            }
+        })
+    }
+
+    return (
+        <div className="edit-task-card">
+            <div className="edit-task-card-container">
+                <input 
+                className="new-task-input"
+                placeholder="What are you working on?"
+                type="text"
+                value={newTaskName}  
+                onChange={handleTaskNameChange}
+                />
+                <div className="edit-task-card-pomodoros">
+                    <div className="pomodoros-title-container">
+                        <span className="pomodoros-title">Est Pomodoros</span>
+                    </div>
+                    <div className="pomodoros-counting">
+                        <input type="number" className="pomodoros-input" min={0} value={newEstPomodoros} step={1} readOnly/>
+                        <div className="pomodoros-buttons">
+                            <button className="pomodoros-button" onClick={increasePomodoros}>
+                                <span className="material-icons">keyboard_arrow_up</span>
+                            </button>
+                            <button className="pomodoros-button" onClick={decreasePomodoros}>
+                                <span className="material-icons">keyboard_arrow_down</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="edit-task-card-buttons">
+                <button className="btn-cancel" onClick={cancel}>Cancel</button>
+                <button className="btn-save" onClick={save}>Save</button>
+            </div>
+        </div>
+    )
+}

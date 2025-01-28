@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import NewTask from "./NewTask";
+import TasksItem from "./TasksItem";
 
 export default function TasksContainer() {
   const [newTask, setNewTask] = useState("");
@@ -28,13 +29,28 @@ export default function TasksContainer() {
         return [...currentTasks, {
           id: crypto.randomUUID(),
           name: newTask,
-          pomodoros: pomodoros,
+          estPomodoros: pomodoros,
           completed: false
         }]
       }
     )
 
     setPomodoros(1);
+  }
+
+  function handleEditTask(id, newName, newEstPomodoros) {
+    setTasks((currentTasks) => {
+      return currentTasks.map(task => {
+        if (task.id === id) {
+          return {
+            ...task,
+            name: newName,
+            estPomodoros: newEstPomodoros
+          }
+        }
+        return task;
+      })
+    })
   }
 
   return (
@@ -45,19 +61,12 @@ export default function TasksContainer() {
       <div className="tasks-list">
         {tasks.map(task => {
           return (
-            <div className="tasks-item" key={task.id}>
-              <div className="tasks-item-name">
-                <span>{task.name}</span>
-              </div>
-              <div className="tasks-item-trailing-content">
-                <div className="tasks-item-pomodoros">
-                  <span>0</span>
-                  <span>/</span>
-                  <span>{task.pomodoros}</span>
-                </div>
-                <div className="tasks-item-options-button"></div>
-              </div>
-            </div>
+            <TasksItem 
+              task={task}
+              key={task.id}
+              setTasks={setTasks}
+              editTask={handleEditTask}
+            />
           )
         })}
       </div>
