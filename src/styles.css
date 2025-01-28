@@ -1,0 +1,255 @@
+:root {
+    --color1: #991b27;
+    --color2: #bd2630;
+    --color3: #e64f25;
+    --color4: #ed884c;
+    --color5: #f1a183;
+    --color6: #E5DADA;
+    --color7: #D5C5C3;
+}
+
+body {
+    /* background: #840032; */
+    /* background: #740938; */
+    background: var(--color1);
+    color: var(--color6);
+    font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.container {
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tasks-top-panel {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: var(--color6) 2px solid;
+}
+
+.tasks-title {
+    font-size: 1.5rem;
+}
+
+.new-task-button {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 0px;
+    background: var(--color5);
+    color: var(--color1);
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.new-task-card {
+    width: 100%;
+    margin-top: 20px;
+    background: var(--color4);
+    border-radius: 8px;
+}
+
+.new-task-card-container {
+    margin-bottom: 12px;
+    padding: 20px;
+}
+
+.new-task-input {
+    font-size: 2rem;
+    color: var(--color1);
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin-bottom: 12px;
+}
+
+.new-task-input::placeholder {
+    font-style: italic;
+    color: var(--color6);
+    opacity: 0.8;
+}
+
+.new-task-input:focus {
+    outline: none;
+}
+
+.pomodoros-title-container {
+    margin-bottom: 12px;
+}
+
+.pomodoros-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color1);
+}
+
+.pomodoros-counting {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.pomodoros-input {
+    padding: 12px;
+    width: 50px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color6);
+    color: var(--color1);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.pomodoros-input:focus {
+    outline: none;
+}
+
+.pomodoros-button {
+    color: var(--color6);
+    background: var(--color2);
+    border: none;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.new-task-card-bar {
+    padding: 20px;
+    background: var(--color5);
+    border-radius: 0px 0px 8px 8px;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+}
+
+.btn-save {
+    background: var(--color2);
+    color: var(--color6);
+    font-weight: bold;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.btn-cancel {
+    border: none;
+    background: none;
+    color: var(--color2);
+    font-weight: bold;
+}
+
+.tasks-list {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.tasks-item {
+    background: var(--color6);
+    color: var(--color3);
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tasks-item-trailing-content {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.options-button {
+    border-radius: 5px;
+    border-color: var(--color3);
+    border-style: solid;
+    border-width: 1px;
+    background: var(--color6);
+    color: var(--color3);
+}
+
+.options-button:hover {
+    cursor: pointer;
+}
+
+.tasks-item-options {
+    position: absolute;
+    width: 125px;
+    padding: 12px 0px;
+    background: var(--color6);
+    color: var(--color3);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: normal;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 20px;
+}
+
+.tasks-item-options-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 12px;
+}
+
+.tasks-item-options-item:last-child {
+    margin-bottom: 0px;
+}
+
+.tasks-item-options-item:hover {
+    cursor: pointer;
+    background: var(--color7);
+}
+
+.edit-task-card {
+    width: 100%;
+    margin-top: 20px;
+    background: var(--color4);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.edit-task-card-container {
+    margin-bottom: 12px;
+    padding: 20px;
+}
+
+.edit-task-input {
+    font-size: 2rem;
+    color: var(--color1);
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin-bottom: 12px;
+}
+
+.edit-task-input::placeholder {
+    font-style: italic;
+    color: var(--color6);
+    opacity: 0.8;
+}
+
+.edit-task-input:focus {
+    outline: none;
+}
+
+.edit-task-card-buttons {
+    padding: 20px;
+    background: var(--color5);
+    border-radius: 0px 0px 8px 8px;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+}
