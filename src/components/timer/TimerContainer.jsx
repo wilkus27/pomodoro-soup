@@ -1,15 +1,82 @@
 import { useEffect, useState } from "react"
 import TimerOption from "./TimerOption";
+import TimerCounter from "./TimerCounter";
 
 export default function TimerContainer() {
-    const [pomodoroTime, setPomodoroTime] = useState(1500)
-    const [isCountingDown, setIsCountingDown] = useState(false)
+    const POMODORO_DEFAULT = 1500;
+    const SHORT_BREAK_DEFAULT = 300;
+    const LONG_BREAK_DEFAULT = 900;
 
-    const pomodoroMinutes = Math.floor((pomodoroTime % 3600) / 60);
-    const pomodoroSeconds = (pomodoroTime % 60);
+    const [activeOption, setActiveOption] = useState(0)
+
+    const [pomodoroTime, setPomodoroTime] = useState(POMODORO_DEFAULT)
+    const [shortBreakTime, setShortBreakTime] = useState(SHORT_BREAK_DEFAULT)
+    const [longBreakTime, setLongBreakTime] = useState(LONG_BREAK_DEFAULT)
+
+    const [isPomodoroCountingDown, setIsPomodoroCountingDown] = useState(false)
+    const [isShortBreakCountingDown, setIsShortBreakCountingDown] = useState(false)
+    const [isLongBreakCountingDown, setIsLongBreakCountingDown] = useState(false)
+
+    function minutes(time) {
+        return Math.floor((time % 3600) / 60);
+    }
+
+    function seconds(time) {
+        return time % 60
+    }
+
+    const options = [
+        {
+            id: 0,
+            title: "Pomodoro",
+            theme: "redish",
+            default: POMODORO_DEFAULT,
+            minutes: minutes(pomodoroTime),
+            seconds: seconds(pomodoroTime),
+            setTime: setPomodoroTime,
+            isCountingDown: isPomodoroCountingDown,
+            setIsCountingDown: setIsPomodoroCountingDown,
+        },
+        {
+            id: 1,
+            title: "Short Break",
+            theme: "greenish",
+            default: SHORT_BREAK_DEFAULT,
+            minutes: minutes(shortBreakTime),
+            seconds: seconds(shortBreakTime),
+            setTime: setShortBreakTime,
+            isCountingDown: isShortBreakCountingDown,
+            setIsCountingDown: setIsShortBreakCountingDown
+        },
+        {
+            id: 2,
+            title: "Long Break",
+            theme: "blueish",
+            default: LONG_BREAK_DEFAULT,
+            minutes: minutes(longBreakTime),
+            seconds: seconds(longBreakTime),
+            setTime: setLongBreakTime,
+            isCountingDown: isLongBreakCountingDown,
+            setIsCountingDown: setIsLongBreakCountingDown
+        }
+    ]
+
+    function selectOption(option) {
+        // Set theme
+        document.querySelector('body').setAttribute('data-theme', option.theme)
+        // Make option active
+        setActiveOption(option.id)
+        // Reset timers of inactive options
+        options.map((option) => {
+            if(activeOption !== option.id) {
+                option.setIsCountingDown(false)
+                option.setTime(option.default)
+            }
+        })
+    }
 
     useEffect(() => {
-        if (isCountingDown) {
+        if (isPomodoroCountingDown) {
             const interval = setInterval(() => {
                 setPomodoroTime((currentTime) => {
                     if (currentTime === 0) {
@@ -23,21 +90,60 @@ export default function TimerContainer() {
 
             return () => clearInterval(interval)
         }
-    }, [isCountingDown]);
+
+        if (isShortBreakCountingDown) {
+            const interval = setInterval(() => {
+                setShortBreakTime((currentTime) => {
+                    if (currentTime === 0) {
+                        clearInterval(interval)
+                        return 0;
+                    } else {
+                        return currentTime -1;
+                    }
+                })
+            }, 1000);
+
+            return () => clearInterval(interval)
+        }
+
+        if (isLongBreakCountingDown) {
+            const interval = setInterval(() => {
+                setLongBreakTime((currentTime) => {
+                    if (currentTime === 0) {
+                        clearInterval(interval)
+                        return 0;
+                    } else {
+                        return currentTime -1;
+                    }
+                })
+            }, 1000);
+
+            return () => clearInterval(interval)
+        }
+    }, [isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown]);
 
     return (
         <div className="timer-container">
             <div className="timer">
                 <div className="timer-options">
-                    <TimerOption theme="redish" title="Pomodoro" />
-                    <TimerOption theme="greenish" title="Short Break" />
-                    <TimerOption theme="blueish" title="Long Break" />
+                    {options.map((option) => {
+                        return (
+                            <TimerOption 
+                                key={option.id}
+                                option={option}
+                                selectOption={() => selectOption(option)}
+                                className={`timer-option-btn ${activeOption === option.id ? 'active' : ''}`}
+                            />
+                        )
+                    })}
                 </div>
-                <span className="timer-string">{`${pomodoroMinutes}`.padStart(2, 0)}:{`${pomodoroSeconds}`.padStart(2, 0)}</span>
-                <div className="timer-buttons">
-                    {!isCountingDown && <button className="timer-btn" onClick={() => setIsCountingDown(true)}>START</button>}
-                    {isCountingDown && <button className="timer-btn" onClick={() => setIsCountingDown(false)}>PAUSE</button>}
-                </div>
+                {options.map((option) => {
+                    if (activeOption === option.id) {
+                        return (
+                            <TimerCounter key={option.id} option={option} />
+                        )
+                    }
+                })}
             </div>
         </div>
     )

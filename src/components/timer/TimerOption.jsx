@@ -1,10 +1,5 @@
-export default function TimerOption( {theme, title} ) {
-
-    const setTheme = () => {
-        document.querySelector('body').setAttribute('data-theme', theme)
-    }
-
+export default function TimerOption( {option, selectOption, className} ) {
     return (
-        <button className="timer-option-btn" onClick={setTheme}>{title}</button>
+        <button className={className} onClick={selectOption}>{option.title}</button>
     )
 }
