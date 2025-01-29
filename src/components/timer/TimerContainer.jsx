@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import TimerOption from "./TimerOption";
 
 export default function TimerContainer() {
     const [pomodoroTime, setPomodoroTime] = useState(1500)
@@ -28,9 +29,9 @@ export default function TimerContainer() {
         <div className="timer-container">
             <div className="timer">
                 <div className="timer-options">
-                    <button className="timer-option-btn active">Pomodoro</button>
-                    <button className="timer-option-btn">Short Break</button>
-                    <button className="timer-option-btn">Long Break</button>
+                    <TimerOption theme="redish" title="Pomodoro" />
+                    <TimerOption theme="greenish" title="Short Break" />
+                    <TimerOption theme="blueish" title="Long Break" />
                 </div>
                 <span className="timer-string">{`${pomodoroMinutes}`.padStart(2, 0)}:{`${pomodoroSeconds}`.padStart(2, 0)}</span>
                 <div className="timer-buttons">

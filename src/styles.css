@@ -9,12 +9,33 @@
     --color7: #D5C5C3;
 }
 
+[data-theme="blueish"] {
+    --color1: #294282;
+    --color2: #28345a;
+    --color3: #325c6a;
+    --color4: #6a9a9e;
+    --color5: #9bc6bf;
+    --color5faded: #9bc6bf4a;
+    --color6: #F4FAFB;
+    --color7: #cee6e8;
+}
+
+[data-theme="greenish"] {
+    --color1: #2b393b;
+    --color2: #4e6a6a;
+    --color3: #4e764e;
+    --color4: #74a059;
+    --color5: #a5be7d;
+    --color5faded: #a5be7d4a;
+    --color6: #F4FAFB;
+    --color7: #DAE0F2;
+}
+
 body {
-    /* background: #840032; */
-    /* background: #740938; */
     background: var(--color1);
     color: var(--color6);
     font-family: 'Roboto', sans-serif;
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 input::-webkit-outer-spin-button,
