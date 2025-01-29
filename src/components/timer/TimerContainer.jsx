@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import TimerOption from "./TimerOption";
 import TimerCounter from "./TimerCounter";
 
@@ -17,6 +17,8 @@ export default function TimerContainer() {
     const [isShortBreakCountingDown, setIsShortBreakCountingDown] = useState(false)
     const [isLongBreakCountingDown, setIsLongBreakCountingDown] = useState(false)
 
+    const [breaks, setBrakes] = useState(0)
+
     function minutes(time) {
         return Math.floor((time % 3600) / 60);
     }
@@ -25,7 +27,7 @@ export default function TimerContainer() {
         return time % 60
     }
 
-    const options = [
+    const options = useMemo(() => [
         {
             id: 0,
             title: "Pomodoro",
@@ -59,9 +61,9 @@ export default function TimerContainer() {
             isCountingDown: isLongBreakCountingDown,
             setIsCountingDown: setIsLongBreakCountingDown
         }
-    ]
+    ], [pomodoroTime, shortBreakTime, longBreakTime, isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown])
 
-    function selectOption(option) {
+    const selectOption = useCallback((option) => {
         // Set theme
         document.querySelector('body').setAttribute('data-theme', option.theme)
         // Make option active
@@ -73,7 +75,7 @@ export default function TimerContainer() {
                 option.setTime(option.default)
             }
         })
-    }
+    }, [activeOption, options]);
 
     useEffect(() => {
         if (isPomodoroCountingDown) {
@@ -81,6 +83,11 @@ export default function TimerContainer() {
                 setPomodoroTime((currentTime) => {
                     if (currentTime === 0) {
                         clearInterval(interval)
+                        if (breaks < 4) {
+                            selectOption(options[1])
+                        } else {
+                            selectOption(options[2])
+                        }
                         return 0;
                     } else {
                         return currentTime -1;
@@ -96,6 +103,7 @@ export default function TimerContainer() {
                 setShortBreakTime((currentTime) => {
                     if (currentTime === 0) {
                         clearInterval(interval)
+                        selectOption(options[0])
                         return 0;
                     } else {
                         return currentTime -1;
@@ -111,6 +119,7 @@ export default function TimerContainer() {
                 setLongBreakTime((currentTime) => {
                     if (currentTime === 0) {
                         clearInterval(interval)
+                        selectOption(options[0])
                         return 0;
                     } else {
                         return currentTime -1;
@@ -120,7 +129,19 @@ export default function TimerContainer() {
 
             return () => clearInterval(interval)
         }
-    }, [isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown]);
+    }, [isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown, options, selectOption, breaks]);
+
+    useEffect(() => {
+        if (pomodoroTime === 0) {
+            setBrakes((currentBreaks) => {
+                if (currentBreaks === 4) {
+                    return 0
+                } else {
+                    return currentBreaks +1;
+                }
+            })
+        }
+    }, [pomodoroTime])
 
     return (
         <div className="timer-container">
