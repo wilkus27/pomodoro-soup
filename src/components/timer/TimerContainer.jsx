@@ -18,6 +18,10 @@ export default function TimerContainer() {
     const [isShortBreakCountingDown, setIsShortBreakCountingDown] = useState(false)
     const [isLongBreakCountingDown, setIsLongBreakCountingDown] = useState(false)
 
+    const [skipPomodoro, setSkipPomodoro] = useState(false)
+    const [skipShortBreak, setSkipShortBreak] = useState(false)
+    const [skipLongBreak, setSkipLongBreak] = useState(false)
+
     const [breaks, setBrakes] = useState(0)
     const [pomosRound, setPomosRound] = useState(() => {
         const savedRound = localStorage.getItem("pomosRound");
@@ -51,6 +55,7 @@ export default function TimerContainer() {
             setTime: setPomodoroTime,
             isCountingDown: isPomodoroCountingDown,
             setIsCountingDown: setIsPomodoroCountingDown,
+            setSkip: setSkipPomodoro
         },
         {
             id: 1,
@@ -61,7 +66,8 @@ export default function TimerContainer() {
             seconds: seconds(shortBreakTime),
             setTime: setShortBreakTime,
             isCountingDown: isShortBreakCountingDown,
-            setIsCountingDown: setIsShortBreakCountingDown
+            setIsCountingDown: setIsShortBreakCountingDown,
+            setSkip: setSkipShortBreak
         },
         {
             id: 2,
@@ -72,7 +78,8 @@ export default function TimerContainer() {
             seconds: seconds(longBreakTime),
             setTime: setLongBreakTime,
             isCountingDown: isLongBreakCountingDown,
-            setIsCountingDown: setIsLongBreakCountingDown
+            setIsCountingDown: setIsLongBreakCountingDown,
+            setSkip: setSkipLongBreak
         }
     ], [pomodoroTime, shortBreakTime, longBreakTime, isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown])
 
@@ -86,6 +93,7 @@ export default function TimerContainer() {
             if(activeOption !== option.id) {
                 option.setIsCountingDown(false)
                 option.setTime(option.default)
+                option.setSkip(false)
             }
         })
     }, [activeOption, options]);
@@ -145,7 +153,7 @@ export default function TimerContainer() {
     }, [isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown, options, selectOption, breaks]);
 
     useEffect(() => {
-        if (pomodoroTime === 0) {
+        if (pomodoroTime === 0 || skipPomodoro === true) {
             setBrakes((currentBreaks) => {
                 if (currentBreaks === 4) {
                     return 0
@@ -158,12 +166,26 @@ export default function TimerContainer() {
             })
         }
 
-        if (shortBreakTime === 0 || longBreakTime === 0) {
+        if (shortBreakTime === 0 || longBreakTime === 0 || skipShortBreak === true || skipLongBreak === true) {
             setBreaksRound((currentBreaks) => {
                 return currentBreaks +1;
             })
         }
-    }, [pomodoroTime, shortBreakTime, longBreakTime])
+    }, [pomodoroTime, shortBreakTime, longBreakTime, skipPomodoro, skipShortBreak, skipLongBreak])
+
+    useEffect (() => {
+        if (skipPomodoro === true) {
+            if (breaks < 4) {
+                selectOption(options[1])
+            } else {
+                selectOption(options[2])
+            }
+        }
+
+        if (skipShortBreak === true || skipLongBreak === true) {
+            selectOption(options[0])
+        }
+    }, [options, selectOption, skipPomodoro, skipShortBreak, skipLongBreak, breaks])
 
     useEffect(() => {
         localStorage.setItem("pomosRound", JSON.stringify(pomosRound));
