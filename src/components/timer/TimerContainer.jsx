@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import TimerOption from "./TimerOption";
 import TimerCounter from "./TimerCounter";
+import TimerPomodoroCount from "./TimerPomodoroCount";
 
 export default function TimerContainer() {
     const POMODORO_DEFAULT = 1500;
@@ -18,6 +19,18 @@ export default function TimerContainer() {
     const [isLongBreakCountingDown, setIsLongBreakCountingDown] = useState(false)
 
     const [breaks, setBrakes] = useState(0)
+    const [pomosRound, setPomosRound] = useState(() => {
+        const savedRound = localStorage.getItem("pomosRound");
+        if (savedRound) {
+            return JSON.parse(savedRound)
+        } else return 0;
+    })
+    const [breaksRound, setBreaksRound] = useState(() => {
+        const savedRound = localStorage.getItem("breaksRound");
+        if (savedRound) {
+            return JSON.parse(savedRound)
+        } else return 0;
+    })
 
     function minutes(time) {
         return Math.floor((time % 3600) / 60);
@@ -140,8 +153,25 @@ export default function TimerContainer() {
                     return currentBreaks +1;
                 }
             })
+            setPomosRound((currentPomos) => {
+                return currentPomos +1;
+            })
         }
-    }, [pomodoroTime])
+
+        if (shortBreakTime === 0 || longBreakTime === 0) {
+            setBreaksRound((currentBreaks) => {
+                return currentBreaks +1;
+            })
+        }
+    }, [pomodoroTime, shortBreakTime, longBreakTime])
+
+    useEffect(() => {
+        localStorage.setItem("pomosRound", JSON.stringify(pomosRound));
+    }, [pomosRound]);
+
+    useEffect(() => {
+        localStorage.setItem("breaksRound", JSON.stringify(breaksRound));
+    }, [breaksRound]);
 
     return (
         <div className="timer-container">
@@ -165,6 +195,10 @@ export default function TimerContainer() {
                         )
                     }
                 })}
+            </div>
+            <div className="timer-info">
+                {(activeOption === 0) && <TimerPomodoroCount total={pomosRound} refresh={() => setPomosRound(0)} name="Pomos" />}
+                {(activeOption != 0) && <TimerPomodoroCount total={breaksRound} refresh={() => setBreaksRound(0)} name="Breaks" />}
             </div>
         </div>
     )
