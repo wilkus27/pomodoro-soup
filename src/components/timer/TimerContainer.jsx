@@ -3,7 +3,7 @@ import TimerOption from "./TimerOption";
 import TimerCounter from "./TimerCounter";
 import TimerPomodoroCount from "./TimerPomodoroCount";
 
-export default function TimerContainer() {
+export default function TimerContainer( {taskName} ) {
     const POMODORO_DEFAULT = 1500;
     const SHORT_BREAK_DEFAULT = 300;
     const LONG_BREAK_DEFAULT = 900;
@@ -221,6 +221,9 @@ export default function TimerContainer() {
             <div className="timer-info">
                 {(activeOption === 0) && <TimerPomodoroCount total={pomosRound} refresh={() => setPomosRound(0)} name="Pomos" />}
                 {(activeOption != 0) && <TimerPomodoroCount total={breaksRound} refresh={() => setBreaksRound(0)} name="Breaks" />}
+            </div>
+            <div className="timer-current-task">
+                <span>{taskName}</span>
             </div>
         </div>
     )
