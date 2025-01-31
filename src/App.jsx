@@ -4,6 +4,15 @@ import TimerContainer from "./components/timer/TimerContainer"
 import { useEffect, useState } from "react";
 
 export default function App() {
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    if (savedTasks) {
+      return JSON.parse(savedTasks);
+    } else {
+      return [];
+    }
+  });
+
   const [taskName, setTaskName] = useState(() => {
     const savedTaskName = localStorage.getItem("currentTaskName")
     if (savedTaskName) {
@@ -16,13 +25,17 @@ export default function App() {
   }
 
   useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
       localStorage.setItem("currentTaskName", JSON.stringify(taskName));
   }, [taskName]);
 
   return (
     <div className="container">
-      <TimerContainer taskName={taskName} />
-      <TasksContainer handleTaskName={handleTaskName} />
+      <TimerContainer taskName={taskName} setTasks={setTasks} />
+      <TasksContainer tasks={tasks} setTasks={setTasks} handleTaskName={handleTaskName} />
     </div>
   )
 }

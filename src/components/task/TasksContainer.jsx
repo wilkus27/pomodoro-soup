@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import NewTask from "./NewTask";
 import TasksItem from "./TasksItem";
 
-export default function TasksContainer( {handleTaskName} ) {
+export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
   const [newTask, setNewTask] = useState("");
   const [currentTask, setCurrentTask] = useState(() => {
     const savedTaskID = localStorage.getItem("currentTask");
@@ -12,20 +12,7 @@ export default function TasksContainer( {handleTaskName} ) {
     } else return null;
   })
 
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-      return JSON.parse(savedTasks);
-    } else {
-      return [];
-    }
-  });
-
   const [pomodoros, setPomodoros] = useState(1);
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
 
   function handleNewTaskChange(event) {
     setNewTask(event.target.value);
@@ -37,6 +24,7 @@ export default function TasksContainer( {handleTaskName} ) {
           id: crypto.randomUUID(),
           name: newTask,
           estPomodoros: pomodoros,
+          finishedPomodoros: 0,
           completed: false,
           selected: false
         }]

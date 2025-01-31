@@ -20,7 +20,7 @@ export default function TasksItem( {task, setTasks, editTask, select, className}
                     </div>
                     <div className="tasks-item-trailing-content">
                         <div className="tasks-item-pomodoros">
-                            <span>0</span>
+                            <span>{task.finishedPomodoros}</span>
                             <span>/</span>
                             <span>{task.estPomodoros}</span>
                         </div>
