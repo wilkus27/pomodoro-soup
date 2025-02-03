@@ -73,9 +73,21 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
     handleTaskName(task.name)
   }
 
+  function handleDeleteTask(id) {
+    setTasks(currentTasks => {
+      return currentTasks.filter(task => task.id !== id)
+    })
+  }
+
   useEffect(() => {
       localStorage.setItem("currentTask", JSON.stringify(currentTask));
   }, [currentTask]);
+
+  useEffect(() => {
+    const filteredByCurrentID = tasks.filter(task => task.id === currentTask);
+
+    if (filteredByCurrentID.length === 0) return setCurrentTask(null)
+  }, [setCurrentTask, currentTask, tasks])
 
   return (
     <div className="tasks-container">
@@ -88,10 +100,10 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
             <TasksItem 
               task={task}
               key={task.id}
-              setTasks={setTasks}
               editTask={handleEditTask}
               select={handleSelectTask}
-              className={`tasks-item ${currentTask === task.id ? 'selected' : ''}`}
+              className={`tasks-item ${task.selected === true ? 'selected' : ''}`}
+              deleteTask={handleDeleteTask}
             />
           )
         })}

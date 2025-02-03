@@ -2,7 +2,7 @@ import { useState } from "react";
 import TasksItemOptions from "./TasksItemOptions";
 import EditTaskCard from "./EditTaskCard";
 
-export default function TasksItem( {task, setTasks, editTask, select, className} ) {
+export default function TasksItem( {task, editTask, select, className, deleteTask} ) {
     const [showOptions, setShowOptions] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -14,7 +14,15 @@ export default function TasksItem( {task, setTasks, editTask, select, className}
     return (
         <>
             {!isEditing ? (
-                <div className={className} onClick={() => select(task)}>
+                <div className={className} onClick={(event) => {
+                    const item = event.currentTarget;
+                    const optionsButton = item.querySelector('.options-button');
+                    const optionsIcon = item.querySelector('.options-button > .material-icons');
+                    if (optionsButton === event.target || optionsIcon === event.target) {
+                        return;
+                    }
+                    return select(task);
+                }}>
                     <div className="tasks-item-name">
                         <span>{task.name}</span>
                     </div>
@@ -28,7 +36,7 @@ export default function TasksItem( {task, setTasks, editTask, select, className}
                             <button className="options-button" onClick={() => setShowOptions(!showOptions)}>
                                 <span className="material-icons">more_vert</span>
                             </button>
-                            {showOptions && <TasksItemOptions setTasks={setTasks} id={task.id} isEditing={handleIsEditing} />}
+                            {showOptions && <TasksItemOptions id={task.id} isEditing={handleIsEditing} deleteTask={deleteTask} />}
                         </div>
                     </div>
                 </div>

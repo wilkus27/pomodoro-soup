@@ -32,6 +32,12 @@ export default function App() {
       localStorage.setItem("currentTaskName", JSON.stringify(taskName));
   }, [taskName]);
 
+  useEffect(() => {
+    const filteredByCurrentName = tasks.filter(task => task.name === taskName);
+
+    if (filteredByCurrentName.length === 0) return setTaskName("Time to focus!")
+  }, [setTaskName, taskName, tasks])
+
   return (
     <div className="container">
       <TimerContainer taskName={taskName} setTasks={setTasks} />
