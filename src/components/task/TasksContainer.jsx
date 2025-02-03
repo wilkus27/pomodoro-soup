@@ -34,14 +34,15 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
     setPomodoros(1);
   }
 
-  function handleEditTask(id, newName, newEstPomodoros) {
+  function handleEditTask(id, newName, newEstPomodoros, newFinishedPomodoros) {
     setTasks((currentTasks) => {
       return currentTasks.map(task => {
         if (task.id === id) {
           return {
             ...task,
             name: newName,
-            estPomodoros: newEstPomodoros
+            estPomodoros: newEstPomodoros,
+            finishedPomodoros: newFinishedPomodoros
           }
         }
         return task;

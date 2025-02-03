@@ -3,13 +3,14 @@ import { useState } from "react";
 export default function EditTaskCard({ isEditing, task, editTask}) {
     const [newTaskName, setNewTaskName] = useState(task.name);
     const [newEstPomodoros, setNewEstPomodoros] = useState(task.estPomodoros);
+    const [newFinishedPomodoros, setNewFinishedPomodoros] = useState(task.finishedPomodoros)
 
     function cancel() {
         isEditing();
     }
 
     function save() {
-        editTask(task.id, newTaskName, newEstPomodoros);
+        editTask(task.id, newTaskName, newEstPomodoros, newFinishedPomodoros);
         isEditing();
     }
 
@@ -45,10 +46,18 @@ export default function EditTaskCard({ isEditing, task, editTask}) {
                 />
                 <div className="edit-task-card-pomodoros">
                     <div className="pomodoros-title-container">
-                        <span className="pomodoros-title">Est Pomodoros</span>
+                        <span className="pomodoros-title">Finished / Est Pomodoros</span>
                     </div>
                     <div className="pomodoros-counting">
-                        <input type="number" className="pomodoros-input" min={0} value={newEstPomodoros} step={1} readOnly/>
+                        <input 
+                            type="number" 
+                            className="pomodoros-input" 
+                            value={newFinishedPomodoros} 
+                            step={1} 
+                            onChange={(e) => setNewFinishedPomodoros(e.target.value)}
+                        />
+                        <span className="pomodoros-counting-divider">/</span>
+                        <input type="number" className="pomodoros-input no-spinners" min={0} value={newEstPomodoros} step={1} readOnly/>
                         <div className="pomodoros-buttons">
                             <button className="pomodoros-button" onClick={increasePomodoros}>
                                 <span className="material-icons">keyboard_arrow_up</span>

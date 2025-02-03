@@ -39,8 +39,8 @@ body {
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input.no-spinners::-webkit-outer-spin-button,
+input.no-spinners::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
@@ -121,6 +121,10 @@ input::-webkit-inner-spin-button {
     display: flex;
     gap: 20px;
     align-items: center;
+}
+
+.pomodoros-counting-divider {
+    font-size: 1.5rem;
 }
 
 .pomodoros-input {
