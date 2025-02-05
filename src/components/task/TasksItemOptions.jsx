@@ -1,10 +1,4 @@
-export default function TasksItemOptions({setTasks, id, isEditing}) {
-    function deleteTask(id) {
-        setTasks(currentTasks => {
-            return currentTasks.filter(task => task.id !== id)
-        })
-    }
-
+export default function TasksItemOptions({id, isEditing, deleteTask}) {
     return (
         <div className="tasks-item-options">
             <div className="tasks-item-options-item" onClick={isEditing}>

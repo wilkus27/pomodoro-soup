@@ -2,23 +2,17 @@ import { useEffect, useState } from "react";
 import NewTask from "./NewTask";
 import TasksItem from "./TasksItem";
 
-export default function TasksContainer() {
+export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
   const [newTask, setNewTask] = useState("");
+  const [currentTask, setCurrentTask] = useState(() => {
+    const savedTaskID = localStorage.getItem("currentTask");
 
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-      return JSON.parse(savedTasks);
-    } else {
-      return [];
-    }
-  });
+    if (savedTaskID) {
+      return JSON.parse(savedTaskID);
+    } else return null;
+  })
 
   const [pomodoros, setPomodoros] = useState(1);
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
 
   function handleNewTaskChange(event) {
     setNewTask(event.target.value);
@@ -30,7 +24,9 @@ export default function TasksContainer() {
           id: crypto.randomUUID(),
           name: newTask,
           estPomodoros: pomodoros,
-          completed: false
+          finishedPomodoros: 0,
+          completed: false,
+          selected: false
         }]
       }
     )
@@ -51,7 +47,47 @@ export default function TasksContainer() {
         return task;
       })
     })
+
+    if (currentTask === id) {
+      handleTaskName(newName)
+    }
   }
+
+  function handleSelectTask(task) {
+    setCurrentTask(task.id)
+    setTasks((currentTasks) => {
+      return currentTasks.map(currentTask => {
+        if (currentTask.id === task.id) {
+          return {
+            ...currentTask,
+            selected: true
+          }
+        } else {
+          return {
+            ...currentTask,
+            selected: false
+          }
+        }
+      })
+    })
+    handleTaskName(task.name)
+  }
+
+  function handleDeleteTask(id) {
+    setTasks(currentTasks => {
+      return currentTasks.filter(task => task.id !== id)
+    })
+  }
+
+  useEffect(() => {
+      localStorage.setItem("currentTask", JSON.stringify(currentTask));
+  }, [currentTask]);
+
+  useEffect(() => {
+    const filteredByCurrentID = tasks.filter(task => task.id === currentTask);
+
+    if (filteredByCurrentID.length === 0) return setCurrentTask(null)
+  }, [setCurrentTask, currentTask, tasks])
 
   return (
     <div className="tasks-container">
@@ -64,8 +100,10 @@ export default function TasksContainer() {
             <TasksItem 
               task={task}
               key={task.id}
-              setTasks={setTasks}
               editTask={handleEditTask}
+              select={handleSelectTask}
+              className={`tasks-item ${task.selected === true ? 'selected' : ''}`}
+              deleteTask={handleDeleteTask}
             />
           )
         })}

@@ -3,7 +3,7 @@ import TimerOption from "./TimerOption";
 import TimerCounter from "./TimerCounter";
 import TimerPomodoroCount from "./TimerPomodoroCount";
 
-export default function TimerContainer() {
+export default function TimerContainer( {taskName, setTasks} ) {
     const POMODORO_DEFAULT = 1500;
     const SHORT_BREAK_DEFAULT = 300;
     const LONG_BREAK_DEFAULT = 900;
@@ -164,6 +164,20 @@ export default function TimerContainer() {
             setPomosRound((currentPomos) => {
                 return currentPomos +1;
             })
+
+            setTasks((currentTasks) => {
+                return currentTasks.map(task => {
+                  const currentPomos = task.finishedPomodoros
+          
+                  if (task.name === taskName) {
+                    return {
+                      ...task,
+                      finishedPomodoros: currentPomos +1
+                    }
+                  }
+                  return task;
+                })
+              })
         }
 
         if (shortBreakTime === 0 || longBreakTime === 0 || skipShortBreak === true || skipLongBreak === true) {
@@ -171,7 +185,7 @@ export default function TimerContainer() {
                 return currentBreaks +1;
             })
         }
-    }, [pomodoroTime, shortBreakTime, longBreakTime, skipPomodoro, skipShortBreak, skipLongBreak])
+    }, [pomodoroTime, shortBreakTime, longBreakTime, skipPomodoro, skipShortBreak, skipLongBreak, setTasks, taskName])
 
     useEffect (() => {
         if (skipPomodoro === true) {
@@ -221,6 +235,9 @@ export default function TimerContainer() {
             <div className="timer-info">
                 {(activeOption === 0) && <TimerPomodoroCount total={pomosRound} refresh={() => setPomosRound(0)} name="Pomos" />}
                 {(activeOption != 0) && <TimerPomodoroCount total={breaksRound} refresh={() => setBreaksRound(0)} name="Breaks" />}
+            </div>
+            <div className="timer-current-task">
+                <span>{taskName}</span>
             </div>
         </div>
     )

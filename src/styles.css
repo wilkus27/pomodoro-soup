@@ -188,6 +188,10 @@ input::-webkit-inner-spin-button {
     justify-content: space-between;
 }
 
+.tasks-item.selected {
+    border-left: 10px solid var(--color4);
+}
+
 .tasks-item-trailing-content {
     display: flex;
     gap: 10px;
@@ -378,4 +382,12 @@ input::-webkit-inner-spin-button {
     background: var(--color4);
     border-radius: 0px 0px 8px 8px;
     padding: 12px;
+}
+
+.timer-current-task {
+    font-size: 1.2rem;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+
 }
