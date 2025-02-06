@@ -39,10 +39,14 @@ body {
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input.no-spinners::-webkit-outer-spin-button,
+input.no-spinners::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+button {
+    cursor: pointer;
 }
 
 .container {
@@ -123,6 +127,10 @@ input::-webkit-inner-spin-button {
     align-items: center;
 }
 
+.pomodoros-counting-divider {
+    font-size: 1.5rem;
+}
+
 .pomodoros-input {
     padding: 12px;
     width: 50px;
@@ -186,10 +194,19 @@ input::-webkit-inner-spin-button {
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .tasks-item.selected {
     border-left: 10px solid var(--color4);
+}
+
+.tasks-item-name {
+    width: 100%;
+}
+
+.tasks-item-name.completed {
+    text-decoration: line-through 2px;
 }
 
 .tasks-item-trailing-content {
@@ -279,6 +296,28 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: end;
     gap: 20px;
+}
+
+.tasks-item-complete-button {
+    border: none;
+    background: none;
+    margin-right: 10px;
+}
+
+.tasks-item:not(.selected) > .tasks-item-complete-button {
+    margin-left: 10px;
+}
+
+.tasks-item-complete-button > span {
+    font-size: 30px;
+}
+
+.tasks-item-complete-button > span.completed {
+    color: var(--color3);
+}
+
+.tasks-item-complete-button > span:not(.completed) {
+    color: var(--color7);
 }
 
 /* TIMER */

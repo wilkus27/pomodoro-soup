@@ -34,14 +34,15 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
     setPomodoros(1);
   }
 
-  function handleEditTask(id, newName, newEstPomodoros) {
+  function handleEditTask(id, newName, newEstPomodoros, newFinishedPomodoros) {
     setTasks((currentTasks) => {
       return currentTasks.map(task => {
         if (task.id === id) {
           return {
             ...task,
             name: newName,
-            estPomodoros: newEstPomodoros
+            estPomodoros: newEstPomodoros,
+            finishedPomodoros: newFinishedPomodoros
           }
         }
         return task;
@@ -79,6 +80,21 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
     })
   }
 
+  function handleCompleteTask(task, completed) {
+    setTasks(currentTasks => {
+      return currentTasks.map(currentTask => {
+        if (currentTask.id === task.id) {
+          return {
+            ...currentTask,
+            completed: completed
+          }
+        }
+
+        return currentTask
+      })
+    })
+  }
+
   useEffect(() => {
       localStorage.setItem("currentTask", JSON.stringify(currentTask));
   }, [currentTask]);
@@ -104,6 +120,7 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
               select={handleSelectTask}
               className={`tasks-item ${task.selected === true ? 'selected' : ''}`}
               deleteTask={handleDeleteTask}
+              completeTask={handleCompleteTask}
             />
           )
         })}
