@@ -80,6 +80,21 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
     })
   }
 
+  function handleCompleteTask(task, completed) {
+    setTasks(currentTasks => {
+      return currentTasks.map(currentTask => {
+        if (currentTask.id === task.id) {
+          return {
+            ...currentTask,
+            completed: completed
+          }
+        }
+
+        return currentTask
+      })
+    })
+  }
+
   useEffect(() => {
       localStorage.setItem("currentTask", JSON.stringify(currentTask));
   }, [currentTask]);
@@ -105,6 +120,7 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
               select={handleSelectTask}
               className={`tasks-item ${task.selected === true ? 'selected' : ''}`}
               deleteTask={handleDeleteTask}
+              completeTask={handleCompleteTask}
             />
           )
         })}

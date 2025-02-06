@@ -2,13 +2,23 @@ import { useState } from "react";
 import TasksItemOptions from "./TasksItemOptions";
 import EditTaskCard from "./EditTaskCard";
 
-export default function TasksItem( {task, editTask, select, className, deleteTask} ) {
+export default function TasksItem( {task, editTask, select, className, deleteTask, completeTask} ) {
     const [showOptions, setShowOptions] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [completed, setCompleted] = useState(false)
+
+    const completedClassName = () => {
+        return task.completed === true ? "completed" : ""
+    }
 
     function handleIsEditing() {
         setIsEditing(!isEditing);
         setShowOptions(false);
+    }
+
+    function toggleCompleteTask() {
+        setCompleted(!completed)
+        completeTask(task, completed)
     }
 
     return (
@@ -23,7 +33,10 @@ export default function TasksItem( {task, editTask, select, className, deleteTas
                     }
                     return select(task);
                 }}>
-                    <div className="tasks-item-name">
+                    <button className="tasks-item-complete-button" onClick={toggleCompleteTask}>
+                        <span className={`material-icons ${completedClassName()}`}>check_circle</span>
+                    </button>
+                    <div className={`tasks-item-name ${completedClassName()}`}>
                         <span>{task.name}</span>
                     </div>
                     <div className="tasks-item-trailing-content">
