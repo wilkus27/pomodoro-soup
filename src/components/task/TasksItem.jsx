@@ -24,21 +24,13 @@ export default function TasksItem( {task, editTask, select, className, deleteTas
     return (
         <>
             {!isEditing ? (
-                <div className={className} onClick={(event) => {
-                    const item = event.currentTarget;
-                    const optionsButton = item.querySelector('.options-button');
-                    const optionsIcon = item.querySelector('.options-button > .material-icons');
-                    if (optionsButton === event.target || optionsIcon === event.target) {
-                        return;
-                    }
-                    return select(task);
-                }}>
+                <div className={className} >
                     <button className="tasks-item-complete-button" onClick={toggleCompleteTask}>
                         <span className={`material-icons ${completedClassName()}`}>check_circle</span>
                     </button>
-                    <div className={`tasks-item-name ${completedClassName()}`}>
+                    <button className={`tasks-item-name ${completedClassName()}`} onClick={() => select(task)}>
                         <span>{task.name}</span>
-                    </div>
+                    </button>
                     <div className="tasks-item-trailing-content">
                         <div className="tasks-item-pomodoros">
                             <span>{task.finishedPomodoros}</span>
