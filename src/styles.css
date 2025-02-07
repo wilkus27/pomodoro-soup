@@ -390,21 +390,16 @@ button {
     border: none;
 }
 
-.timer-btn:hover {
-    cursor: pointer;
-}
-
 .timer-skip {
     position: absolute;
     right: 0;
+    border: none;
+    background: none;
+    color: var(--color6);
 }
 
 .timer-skip > span {
     font-size: 3rem;
-}
-
-.timer-skip:hover {
-    cursor: pointer;
 }
 
 .timer-pomodoro-count {
@@ -421,7 +416,10 @@ button {
 }
 
 .timer-pomodoro-count > .refresh {
-    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--color1);
+    padding: 0;
 }
 
 .timer-info {
