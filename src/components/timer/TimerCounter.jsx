@@ -7,9 +7,9 @@ export default function TimerCounter( {option} ) {
                 {option.isCountingDown && 
                     <>
                         <button className="timer-btn" onClick={() => option.setIsCountingDown(false)}>PAUSE</button>
-                        <div className="timer-skip" onClick={() => option.setSkip(true)}>
+                        <button className="timer-skip" onClick={() => option.setSkip(true)}>
                             <span className="material-icons">skip_next</span>
-                        </div>
+                        </button>
                     </>
                 }
             </div>
