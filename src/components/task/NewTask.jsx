@@ -2,7 +2,7 @@ import { useState } from 'react';
 import NewTaskCard from './NewTaskCard';
 import AddTaskButton from './AddTaskButton';
 
-export default function NewTask( {change, submit, pomodoros, setPomodoros} ) {
+export default function NewTask( {pomodoros, setPomodoros} ) {
     const [addTaskButton, setAddTaskButton] = useState(true);
 
     const showAddTaskButton = () => {
@@ -19,9 +19,7 @@ export default function NewTask( {change, submit, pomodoros, setPomodoros} ) {
                 <AddTaskButton hideButton={hideAddTaskButton} />
             ) : (
                 <NewTaskCard 
-                    showAddTaskButton={showAddTaskButton} 
-                    change={change} 
-                    submit={submit}
+                    showAddTaskButton={showAddTaskButton}
                     pomodoros={pomodoros}
                     setPomodoros={setPomodoros}
                 />

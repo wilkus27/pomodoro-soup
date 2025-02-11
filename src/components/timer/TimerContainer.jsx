@@ -2,11 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import TimerOption from "./TimerOption";
 import TimerCounter from "./TimerCounter";
 import TimerPomodoroCount from "./TimerPomodoroCount";
+import { useSelector } from "react-redux";
 
-export default function TimerContainer( {taskName, setTasks} ) {
+export default function TimerContainer( {setTasks} ) {
     const POMODORO_DEFAULT = 1500;
     const SHORT_BREAK_DEFAULT = 300;
     const LONG_BREAK_DEFAULT = 900;
+
+    const taskName = useSelector((state) => state.tasks.currentTaskName)
 
     const [activeOption, setActiveOption] = useState(0)
 
