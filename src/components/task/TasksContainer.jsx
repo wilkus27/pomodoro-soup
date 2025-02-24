@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import NewTask from "./NewTask";
 import TasksItem from "./TasksItem";
+import { useSelector } from "react-redux";
 
-export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
-  const [newTask, setNewTask] = useState("");
+export default function TasksContainer() {
   const [currentTask, setCurrentTask] = useState(() => {
     const savedTaskID = localStorage.getItem("currentTask");
 
@@ -14,86 +14,7 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
 
   const [pomodoros, setPomodoros] = useState(1);
 
-  function handleNewTaskChange(event) {
-    setNewTask(event.target.value);
-  }
-
-  function handleNewTaskSubmit() {
-    setTasks((currentTasks) => {
-        return [...currentTasks, {
-          id: crypto.randomUUID(),
-          name: newTask,
-          estPomodoros: pomodoros,
-          finishedPomodoros: 0,
-          completed: false,
-          selected: false
-        }]
-      }
-    )
-
-    setPomodoros(1);
-  }
-
-  function handleEditTask(id, newName, newEstPomodoros, newFinishedPomodoros) {
-    setTasks((currentTasks) => {
-      return currentTasks.map(task => {
-        if (task.id === id) {
-          return {
-            ...task,
-            name: newName,
-            estPomodoros: newEstPomodoros,
-            finishedPomodoros: newFinishedPomodoros
-          }
-        }
-        return task;
-      })
-    })
-
-    if (currentTask === id) {
-      handleTaskName(newName)
-    }
-  }
-
-  function handleSelectTask(task) {
-    setCurrentTask(task.id)
-    setTasks((currentTasks) => {
-      return currentTasks.map(currentTask => {
-        if (currentTask.id === task.id) {
-          return {
-            ...currentTask,
-            selected: true
-          }
-        } else {
-          return {
-            ...currentTask,
-            selected: false
-          }
-        }
-      })
-    })
-    handleTaskName(task.name)
-  }
-
-  function handleDeleteTask(id) {
-    setTasks(currentTasks => {
-      return currentTasks.filter(task => task.id !== id)
-    })
-  }
-
-  function handleCompleteTask(task, completed) {
-    setTasks(currentTasks => {
-      return currentTasks.map(currentTask => {
-        if (currentTask.id === task.id) {
-          return {
-            ...currentTask,
-            completed: completed
-          }
-        }
-
-        return currentTask
-      })
-    })
-  }
+  const tasks = useSelector((state) => state.tasks.allTasks)
 
   useEffect(() => {
       localStorage.setItem("currentTask", JSON.stringify(currentTask));
@@ -116,18 +37,12 @@ export default function TasksContainer( {tasks, setTasks, handleTaskName} ) {
             <TasksItem 
               task={task}
               key={task.id}
-              editTask={handleEditTask}
-              select={handleSelectTask}
               className={`tasks-item ${task.selected === true ? 'selected' : ''}`}
-              deleteTask={handleDeleteTask}
-              completeTask={handleCompleteTask}
             />
           )
         })}
       </div>
-      <NewTask 
-        change={handleNewTaskChange} 
-        submit={handleNewTaskSubmit} 
+      <NewTask  
         pomodoros={pomodoros}
         setPomodoros={setPomodoros}
       />

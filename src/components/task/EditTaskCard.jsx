@@ -1,16 +1,26 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { editTask } from "../../slices/taskSlice";
 
-export default function EditTaskCard({ isEditing, task, editTask}) {
+export default function EditTaskCard({ isEditing, task}) {
     const [newTaskName, setNewTaskName] = useState(task.name);
     const [newEstPomodoros, setNewEstPomodoros] = useState(task.estPomodoros);
     const [newFinishedPomodoros, setNewFinishedPomodoros] = useState(task.finishedPomodoros)
+
+    const dispatch = useDispatch();
 
     function cancel() {
         isEditing();
     }
 
     function save() {
-        editTask(task.id, newTaskName, newEstPomodoros, newFinishedPomodoros);
+        dispatch(editTask({
+            id: task.id,
+            newName: newTaskName,
+            newEstPomodoros: newEstPomodoros,
+            newFinishedPomodoros: newFinishedPomodoros
+        }))
+
         isEditing();
     }
 

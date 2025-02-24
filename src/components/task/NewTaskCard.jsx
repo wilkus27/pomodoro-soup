@@ -1,8 +1,24 @@
-export default function NewTaskCard({showAddTaskButton, change, submit, pomodoros, setPomodoros }) {
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTask } from "../../slices/taskSlice";
+
+export default function NewTaskCard({showAddTaskButton, pomodoros, setPomodoros }) {
+    const [newTaskContent, setNewTaskContent] = useState("");
+
+    const dispatch = useDispatch();
+
+    function handleNewTaskChange(event) {
+        setNewTaskContent(event.target.value);
+    }
 
     function save() {
         showAddTaskButton();
-        submit();
+        dispatch(addTask({ 
+            name: newTaskContent,
+            estPomodoros: pomodoros 
+        }))
+
+        setPomodoros(1);
     }
 
     function cancel() {
@@ -29,7 +45,7 @@ export default function NewTaskCard({showAddTaskButton, change, submit, pomodoro
     return (
         <div className="new-task-card">
             <div className="new-task-card-container">
-                <input className="new-task-input" placeholder="What are you working on?" type="text" onChange={change} />
+                <input className="new-task-input" placeholder="What are you working on?" type="text" onChange={handleNewTaskChange} />
                 <div className="new-task-card-pomodoros">
                     <div className="pomodoros-title-container">
                         <span className="pomodoros-title">Est Pomodoros</span>
