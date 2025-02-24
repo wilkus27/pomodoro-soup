@@ -62,9 +62,17 @@ const taskSlice = createSlice({
         deleteTask: (state, action) => {
             const { id } = action.payload
             state.allTasks = state.allTasks.filter(task => task.id !== id)
+        },
+        finishPomodoro: (state, action) => {
+            const { name } = action.payload
+            state.allTasks = state.allTasks.map((currentTask) => {
+                return (currentTask.name === name)
+                    ? {...currentTask, finishedPomodoros: currentTask.finishedPomodoros +1}
+                    : currentTask
+            })
         }
     }
 });
 
-export const { addTask, editTask, selectTask, completeTask, deleteTask } = taskSlice.actions
+export const { addTask, editTask, selectTask, completeTask, deleteTask, finishPomodoro } = taskSlice.actions
 export default taskSlice.reducer

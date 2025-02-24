@@ -1,122 +1,67 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import TimerOption from "./TimerOption";
 import TimerCounter from "./TimerCounter";
 import TimerPomodoroCount from "./TimerPomodoroCount";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { countBreaksRound, countPomosRound, handleBreaksInInterval, resetBreaksRound, resetPomosRound, selectOption, updateTime } from "../../slices/timerSlice";
+import { finishPomodoro } from "../../slices/taskSlice";
 
-export default function TimerContainer( {setTasks} ) {
-    const POMODORO_DEFAULT = 1500;
-    const SHORT_BREAK_DEFAULT = 300;
-    const LONG_BREAK_DEFAULT = 900;
+export default function TimerContainer() {
+    const dispatch = useDispatch();
 
     const taskName = useSelector((state) => state.tasks.currentTaskName)
+    const activeOption = useSelector((state) => state.timer.activeOption)
 
-    const [activeOption, setActiveOption] = useState(0)
+    const pomodoroTime = useSelector((state) => state.timer.options.pomodoro.time)
+    const shortBreakTime = useSelector((state) => state.timer.options.shortBreak.time)
+    const longBreakTime = useSelector((state) => state.timer.options.longBreak.time)
 
-    const [pomodoroTime, setPomodoroTime] = useState(POMODORO_DEFAULT)
-    const [shortBreakTime, setShortBreakTime] = useState(SHORT_BREAK_DEFAULT)
-    const [longBreakTime, setLongBreakTime] = useState(LONG_BREAK_DEFAULT)
+    const isPomodoroCountingDown = useSelector((state) => state.timer.options.pomodoro.isCountingDown)
+    const isShortBreakCountingDown = useSelector((state) => state.timer.options.shortBreak.isCountingDown)
+    const isLongBreakCountingDown = useSelector((state) => state.timer.options.longBreak.isCountingDown)
 
-    const [isPomodoroCountingDown, setIsPomodoroCountingDown] = useState(false)
-    const [isShortBreakCountingDown, setIsShortBreakCountingDown] = useState(false)
-    const [isLongBreakCountingDown, setIsLongBreakCountingDown] = useState(false)
+    const skipPomodoro = useSelector((state) => state.timer.options.pomodoro.skip)
+    const skipShortBreak = useSelector((state) => state.timer.options.shortBreak.skip)
+    const skipLongBreak = useSelector((state) => state.timer.options.longBreak.skip)
 
-    const [skipPomodoro, setSkipPomodoro] = useState(false)
-    const [skipShortBreak, setSkipShortBreak] = useState(false)
-    const [skipLongBreak, setSkipLongBreak] = useState(false)
+    const breaksInInterval = useSelector((state) => state.timer.breaksInInterval)
 
-    const [breaks, setBrakes] = useState(0)
-    const [pomosRound, setPomosRound] = useState(() => {
-        const savedRound = localStorage.getItem("pomosRound");
-        if (savedRound) {
-            return JSON.parse(savedRound)
-        } else return 0;
-    })
-    const [breaksRound, setBreaksRound] = useState(() => {
-        const savedRound = localStorage.getItem("breaksRound");
-        if (savedRound) {
-            return JSON.parse(savedRound)
-        } else return 0;
-    })
-
-    function minutes(time) {
-        return Math.floor((time % 3600) / 60);
-    }
-
-    function seconds(time) {
-        return time % 60
-    }
+    const pomosRound = useSelector((state) => state.timer.pomosRound)
+    const breaksRound = useSelector((state) => state.timer.breaksRound)
 
     const options = useMemo(() => [
         {
-            id: 0,
+            key: "pomodoro",
             title: "Pomodoro",
-            theme: "redish",
-            default: POMODORO_DEFAULT,
-            minutes: minutes(pomodoroTime),
-            seconds: seconds(pomodoroTime),
-            setTime: setPomodoroTime,
-            isCountingDown: isPomodoroCountingDown,
-            setIsCountingDown: setIsPomodoroCountingDown,
-            setSkip: setSkipPomodoro
+            time: pomodoroTime,
+            isCountingDown: isPomodoroCountingDown
         },
         {
-            id: 1,
+            key: "shortBreak",
             title: "Short Break",
-            theme: "greenish",
-            default: SHORT_BREAK_DEFAULT,
-            minutes: minutes(shortBreakTime),
-            seconds: seconds(shortBreakTime),
-            setTime: setShortBreakTime,
-            isCountingDown: isShortBreakCountingDown,
-            setIsCountingDown: setIsShortBreakCountingDown,
-            setSkip: setSkipShortBreak
+            time: shortBreakTime,
+            isCountingDown: isShortBreakCountingDown
         },
         {
-            id: 2,
+            key: "longBreak",
             title: "Long Break",
-            theme: "blueish",
-            default: LONG_BREAK_DEFAULT,
-            minutes: minutes(longBreakTime),
-            seconds: seconds(longBreakTime),
-            setTime: setLongBreakTime,
-            isCountingDown: isLongBreakCountingDown,
-            setIsCountingDown: setIsLongBreakCountingDown,
-            setSkip: setSkipLongBreak
+            time: longBreakTime,
+            isCountingDown: isLongBreakCountingDown
         }
     ], [pomodoroTime, shortBreakTime, longBreakTime, isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown])
-
-    const selectOption = useCallback((option) => {
-        // Set theme
-        document.querySelector('body').setAttribute('data-theme', option.theme)
-        // Make option active
-        setActiveOption(option.id)
-        // Reset timers of inactive options
-        options.map((option) => {
-            if(activeOption !== option.id) {
-                option.setIsCountingDown(false)
-                option.setTime(option.default)
-                option.setSkip(false)
-            }
-        })
-    }, [activeOption, options]);
 
     useEffect(() => {
         if (isPomodoroCountingDown) {
             const interval = setInterval(() => {
-                setPomodoroTime((currentTime) => {
-                    if (currentTime === 0) {
-                        clearInterval(interval)
-                        if (breaks < 4) {
-                            selectOption(options[1])
-                        } else {
-                            selectOption(options[2])
-                        }
-                        return 0;
+                dispatch(updateTime( { key: "pomodoro"} ))
+                if (pomodoroTime === 0) {
+                    clearInterval(interval)
+                    if (breaksInInterval < 4) {
+                        dispatch(selectOption({option: "shortBreak"}))
                     } else {
-                        return currentTime -1;
+                        dispatch(selectOption({option: "longBreak"}))
                     }
-                })
+                }
             }, 1000);
 
             return () => clearInterval(interval)
@@ -124,15 +69,11 @@ export default function TimerContainer( {setTasks} ) {
 
         if (isShortBreakCountingDown) {
             const interval = setInterval(() => {
-                setShortBreakTime((currentTime) => {
-                    if (currentTime === 0) {
-                        clearInterval(interval)
-                        selectOption(options[0])
-                        return 0;
-                    } else {
-                        return currentTime -1;
-                    }
-                })
+                dispatch(updateTime( { key: "shortBreak"} ))
+                if (shortBreakTime === 0) {
+                    clearInterval(interval)
+                    dispatch(selectOption({option: "pomodoro"}))
+                }
             }, 1000);
 
             return () => clearInterval(interval)
@@ -140,77 +81,54 @@ export default function TimerContainer( {setTasks} ) {
 
         if (isLongBreakCountingDown) {
             const interval = setInterval(() => {
-                setLongBreakTime((currentTime) => {
-                    if (currentTime === 0) {
-                        clearInterval(interval)
-                        selectOption(options[0])
-                        return 0;
-                    } else {
-                        return currentTime -1;
-                    }
-                })
+                dispatch(updateTime( { key: "longBreak"} ))
+                if (longBreakTime === 0) {
+                    clearInterval(interval)
+                    dispatch(selectOption({option: "pomodoro"}))
+                }
             }, 1000);
 
             return () => clearInterval(interval)
         }
-    }, [isPomodoroCountingDown, isShortBreakCountingDown, isLongBreakCountingDown, options, selectOption, breaks]);
+    }, [
+        isPomodoroCountingDown,
+        isShortBreakCountingDown,
+        isLongBreakCountingDown,
+        options,
+        breaksInInterval,
+        dispatch,
+        pomodoroTime,
+        shortBreakTime,
+        longBreakTime
+    ]);
 
     useEffect(() => {
         if (pomodoroTime === 0 || skipPomodoro === true) {
-            setBrakes((currentBreaks) => {
-                if (currentBreaks === 4) {
-                    return 0
-                } else {
-                    return currentBreaks +1;
-                }
-            })
-            setPomosRound((currentPomos) => {
-                return currentPomos +1;
-            })
+            dispatch(handleBreaksInInterval())
 
-            setTasks((currentTasks) => {
-                return currentTasks.map(task => {
-                  const currentPomos = task.finishedPomodoros
-          
-                  if (task.name === taskName) {
-                    return {
-                      ...task,
-                      finishedPomodoros: currentPomos +1
-                    }
-                  }
-                  return task;
-                })
-              })
+            dispatch(countPomosRound())
+
+            dispatch(finishPomodoro({name: taskName}))
         }
 
         if (shortBreakTime === 0 || longBreakTime === 0 || skipShortBreak === true || skipLongBreak === true) {
-            setBreaksRound((currentBreaks) => {
-                return currentBreaks +1;
-            })
+           dispatch(countBreaksRound())
         }
-    }, [pomodoroTime, shortBreakTime, longBreakTime, skipPomodoro, skipShortBreak, skipLongBreak, setTasks, taskName])
+    }, [pomodoroTime, shortBreakTime, longBreakTime, skipPomodoro, skipShortBreak, skipLongBreak, taskName, dispatch])
 
     useEffect (() => {
         if (skipPomodoro === true) {
-            if (breaks < 4) {
-                selectOption(options[1])
+            if (breaksInInterval < 4) {
+                dispatch(selectOption({option: "shortBreak"}))
             } else {
-                selectOption(options[2])
+                dispatch(selectOption({option: "longBreak"}))
             }
         }
 
         if (skipShortBreak === true || skipLongBreak === true) {
-            selectOption(options[0])
+            dispatch(selectOption({option: "pomodoro"}))
         }
-    }, [options, selectOption, skipPomodoro, skipShortBreak, skipLongBreak, breaks])
-
-    useEffect(() => {
-        localStorage.setItem("pomosRound", JSON.stringify(pomosRound));
-    }, [pomosRound]);
-
-    useEffect(() => {
-        localStorage.setItem("breaksRound", JSON.stringify(breaksRound));
-    }, [breaksRound]);
+    }, [options, skipPomodoro, skipShortBreak, skipLongBreak, breaksInInterval, dispatch])
 
     return (
         <div className="timer-container">
@@ -219,25 +137,25 @@ export default function TimerContainer( {setTasks} ) {
                     {options.map((option) => {
                         return (
                             <TimerOption 
-                                key={option.id}
+                                key={option.key}
                                 option={option}
-                                selectOption={() => selectOption(option)}
-                                className={`timer-option-btn ${activeOption === option.id ? 'active' : ''}`}
+                                selectOption={() => dispatch(selectOption({option: option.key}))}
+                                className={`timer-option-btn ${activeOption === option.key ? 'active' : ''}`}
                             />
                         )
                     })}
                 </div>
                 {options.map((option) => {
-                    if (activeOption === option.id) {
+                    if (activeOption === option.key) {
                         return (
-                            <TimerCounter key={option.id} option={option} />
+                            <TimerCounter key={option.key} option={option} />
                         )
                     }
                 })}
             </div>
             <div className="timer-info">
-                {(activeOption === 0) && <TimerPomodoroCount total={pomosRound} refresh={() => setPomosRound(0)} name="Pomos" />}
-                {(activeOption != 0) && <TimerPomodoroCount total={breaksRound} refresh={() => setBreaksRound(0)} name="Breaks" />}
+                {(activeOption === "pomodoro") && <TimerPomodoroCount total={pomosRound} refresh={() => dispatch(resetPomosRound())} name="Pomos" />}
+                {(activeOption != "pomodoro") && <TimerPomodoroCount total={breaksRound} refresh={() => dispatch(resetBreaksRound())} name="Breaks" />}
             </div>
             <div className="timer-current-task">
                 <span>{taskName}</span>
