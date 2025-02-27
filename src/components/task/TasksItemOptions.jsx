@@ -9,7 +9,7 @@ export default function TasksItemOptions({id, isEditing}) {
     }
 
     return (
-        <div className="tasks-item-options">
+        <div className="tasks-item-options absolute w-31 py-3 px-0 bg-color6 rounded-lg shadow-md">
             <button className="tasks-item-options-item" onClick={isEditing}>
                 <span className="material-icons">edit</span>
                 <span>Edit</span>
