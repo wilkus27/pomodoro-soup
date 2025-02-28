@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { editTask } from "../../slices/taskSlice";
+import TaskCard from "./TaskCard";
 
 export default function EditTaskCard({ isEditing, task}) {
     const [newTaskName, setNewTaskName] = useState(task.name);
@@ -45,44 +46,36 @@ export default function EditTaskCard({ isEditing, task}) {
     }
 
     return (
-        <div className="edit-task-card">
-            <div className="edit-task-card-container">
-                <input 
-                className="new-task-input"
-                placeholder="What are you working on?"
-                type="text"
-                value={newTaskName}  
-                onChange={handleTaskNameChange}
-                />
-                <div className="edit-task-card-pomodoros">
-                    <div className="pomodoros-title-container">
-                        <span className="pomodoros-title">Finished / Est Pomodoros</span>
-                    </div>
-                    <div className="pomodoros-counting">
-                        <input 
-                            type="number" 
-                            className="pomodoros-input" 
-                            value={newFinishedPomodoros} 
-                            step={1} 
-                            onChange={(e) => setNewFinishedPomodoros(e.target.value)}
-                        />
-                        <span className="pomodoros-counting-divider">/</span>
-                        <input type="number" className="pomodoros-input no-spinners" min={0} value={newEstPomodoros} step={1} readOnly/>
-                        <div className="pomodoros-buttons">
-                            <button className="pomodoros-button" onClick={increasePomodoros}>
-                                <span className="material-icons">keyboard_arrow_up</span>
-                            </button>
-                            <button className="pomodoros-button" onClick={decreasePomodoros}>
-                                <span className="material-icons">keyboard_arrow_down</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="edit-task-card-buttons">
-                <button className="btn-cancel" onClick={cancel}>Cancel</button>
-                <button className="btn-save" onClick={save}>Save</button>
-            </div>
-        </div>
+        <TaskCard
+            value={newTaskName}
+            onChange={handleTaskNameChange}
+            hasMarginBottom={true}
+            pomodorosTitle={"Finished / Est Pomodoros"}
+            pomodorosCountingChildren={<PomodorosCountingChildren 
+                    finished={newFinishedPomodoros} 
+                    onChange={(e) => setNewFinishedPomodoros(e.target.value)}
+                    newEst={newEstPomodoros}
+                />}
+            increasePomodoros={increasePomodoros}
+            decreasePomodoros={decreasePomodoros}
+            save={save}
+            cancel={cancel}
+        />
+    )
+}
+
+function PomodorosCountingChildren( {finished, onChange, newEst} ) {
+    return (
+        <>
+            <input 
+                type="number" 
+                className="pomodoros-input" 
+                value={finished} 
+                step={1} 
+                onChange={onChange}
+            />
+            <span className="pomodoros-counting-divider text-2xl">/</span>
+            <input type="number" className="pomodoros-input no-spinners" min={0} value={newEst} step={1} readOnly/>
+        </>
     )
 }

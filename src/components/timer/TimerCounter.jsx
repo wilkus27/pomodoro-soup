@@ -21,14 +21,14 @@ export default function TimerCounter( {option} ) {
 
     return (
         <>
-            <span className="timer-string">{`${minutes(option.time)}`.padStart(2, 0)}:{`${seconds(option.time)}`.padStart(2, 0)}</span>
-            <div className="timer-buttons">
+            <span className="timer-string text-9xl">{`${minutes(option.time)}`.padStart(2, 0)}:{`${seconds(option.time)}`.padStart(2, 0)}</span>
+            <div className="timer-buttons w-full relative flex-center">
                 {!option.isCountingDown && <button className="timer-btn" onClick={() => setCountingDown(true)}>START</button>}
                 {option.isCountingDown && 
                     <>
                         <button className="timer-btn" onClick={() => setCountingDown(false)}>PAUSE</button>
-                        <button className="timer-skip" onClick={() => dispatch(skipRound({key: option.key}))}>
-                            <span className="material-icons">skip_next</span>
+                        <button className="timer-skip absolute right-0 border-none bg-none text-color6" onClick={() => dispatch(skipRound({key: option.key}))}>
+                            <span className="text-5xl! material-icons">skip_next</span>
                         </button>
                     </>
                 }

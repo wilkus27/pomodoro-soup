@@ -28,16 +28,16 @@ export default function TasksContainer() {
 
   return (
     <div className="tasks-container">
-      <div className="tasks-top-panel">
-        <span className="tasks-title">Tasks</span>
+      <div className="tasks-top-panel pb-5 mb-5 border-b-color6 border-b-2 border-b-solid">
+        <span className="tasks-title text-2xl">Tasks</span>
       </div>
-      <div className="tasks-list">
+      <div className="tasks-list w-full mb-5">
         {tasks.map(task => {
           return (
             <TasksItem 
               task={task}
               key={task.id}
-              className={`tasks-item ${task.selected === true ? 'selected' : ''}`}
+              className={`tasks-item ${task.selected === true ? 'selected border-l-color4 border-l-10 border-l-solid' : '[&>.tasks-item-complete-button]:ml-2.5'}`}
             />
           )
         })}

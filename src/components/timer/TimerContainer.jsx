@@ -131,9 +131,9 @@ export default function TimerContainer() {
     }, [options, skipPomodoro, skipShortBreak, skipLongBreak, breaksInInterval, dispatch])
 
     return (
-        <div className="timer-container">
-            <div className="timer">
-                <div className="timer-options">
+        <div className="timer-container mb-5 w-full">
+            <div className="timer bg-color5faded rounded-t-lg flex-center flex-col gap-y-5 p-5">
+                <div className="timer-options flex gap-2">
                     {options.map((option) => {
                         return (
                             <TimerOption 
@@ -153,11 +153,11 @@ export default function TimerContainer() {
                     }
                 })}
             </div>
-            <div className="timer-info">
+            <div className="timer-info bg-color4 rounded-b-lg p-3">
                 {(activeOption === "pomodoro") && <TimerPomodoroCount total={pomosRound} refresh={() => dispatch(resetPomosRound())} name="Pomos" />}
                 {(activeOption != "pomodoro") && <TimerPomodoroCount total={breaksRound} refresh={() => dispatch(resetBreaksRound())} name="Breaks" />}
             </div>
-            <div className="timer-current-task">
+            <div className="timer-current-task text-xl italic p-5 text-center">
                 <span>{taskName}</span>
             </div>
         </div>
